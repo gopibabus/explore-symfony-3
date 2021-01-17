@@ -1,20 +1,24 @@
 framework:
     messenger:
         # Uncomment this (and the failed transport below) to send failed messages to this transport for later handling.
-        # failure_transport: failed
-
+        failure_transport: failed
+        buses:
+            messenger.bus.default:
+                middleware:
+                    - App\Messenger\AuditMiddleware
+        
         transports:
             # https://symfony.com/doc/current/messenger.html#transport-configuration
             # We can configure as many transport DSNs as we need and async is just the name of transporter
-             async:
+            async:
                 dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
                 retry_strategy:
                     delay: 500
-            # failed: 'doctrine://default?queue_name=failed'
+            failed: 'doctrine://default?queue_name=failed'
             # sync: 'sync://'
-
+        
         routing:
             # Route your messages to the transports
             # We can Route your messages to the multiple transports
-             'App\Message\AddPonkaToImage': async
-             'App\Message\DeletePhotoFile': async
+            'App\Message\AddPonkaToImage': async
+            'App\Message\DeletePhotoFile': async
