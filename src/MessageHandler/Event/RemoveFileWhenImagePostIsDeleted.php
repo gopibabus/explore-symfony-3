@@ -1,11 +1,12 @@
 <?php
-namespace App\MessageHandler;
 
-use App\Message\DeletePhotoFile;
+namespace App\MessageHandler\Event;
+
+use App\Message\Event\ImagePostDeletedEvent;
 use App\Photo\PhotoFileManager;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 
-class DeletePhotoFileHandler implements MessageHandlerInterface
+class RemoveFileWhenImagePostIsDeleted implements MessageHandlerInterface
 {
     private $photoFileManager;
 
@@ -14,8 +15,8 @@ class DeletePhotoFileHandler implements MessageHandlerInterface
         $this->photoFileManager = $photoFileManager;
     }
 
-    public function __invoke(DeletePhotoFile $deletePhotoFile)
+    public function __invoke(ImagePostDeletedEvent $event)
     {
-        $this->photoFileManager->deleteImage($deletePhotoFile->getFilename());
+       $this->photoFileManager->deleteImage($event->getFilename());
     }
 }

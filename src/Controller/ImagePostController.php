@@ -3,9 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\ImagePost;
-use App\Message\AddPonkaToImage;
-use App\Message\DeleteImagePost;
-use App\Photo\PhotoPonkaficator;
+use App\Message\Command\AddPonkaToImage;
+use App\Message\Command\DeleteImagePost;
 use App\Repository\ImagePostRepository;
 use App\Photo\PhotoFileManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -26,8 +25,10 @@ class ImagePostController extends AbstractController
 {
     /**
      * @Route("/api/images", methods="GET")
+     * @param ImagePostRepository $repository
+     * @return JsonResponse
      */
-    public function list(ImagePostRepository $repository)
+    public function list(ImagePostRepository $repository): JsonResponse
     {
         $posts = $repository->findBy([], ['createdAt' => 'DESC']);
 
@@ -89,7 +90,7 @@ class ImagePostController extends AbstractController
      * @param MessageBusInterface $messageBus
      * @return Response
      */
-    public function delete(ImagePost $imagePost, MessageBusInterface $messageBus)
+    public function delete(ImagePost $imagePost, MessageBusInterface $messageBus): Response
     {
         $messageBus->dispatch(new DeleteImagePost($imagePost));
 

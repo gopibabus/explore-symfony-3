@@ -2,8 +2,13 @@ framework:
     messenger:
         # Uncomment this (and the failed transport below) to send failed messages to this transport for later handling.
         failure_transport: failed
+        default_bus: command.bus
         buses:
-            messenger.bus.default:
+            command.bus:
+                middleware:
+                    - App\Messenger\AuditMiddleware
+            event.bus:
+                default_middleware: allow_no_handlers
                 middleware:
                     - App\Messenger\AuditMiddleware
         
@@ -24,5 +29,5 @@ framework:
         routing:
             # Route your messages to the transports
             # We can Route your messages to the multiple transports
-            'App\Message\AddPonkaToImage': async_priority_high
-            'App\Message\DeletePhotoFile': async
+            'App\Message\Command\AddPonkaToImage': async_priority_high
+            'App\Message\Event\ImagePostDeletedEvent': async
