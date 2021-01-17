@@ -5,10 +5,16 @@ framework:
 
         transports:
             # https://symfony.com/doc/current/messenger.html#transport-configuration
-             async: '%env(MESSENGER_TRANSPORT_DSN)%'
+            # We can configure as many transport DSNs as we need and async is just the name of transporter
+             async:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                retry_strategy:
+                    delay: 500
             # failed: 'doctrine://default?queue_name=failed'
             # sync: 'sync://'
 
         routing:
             # Route your messages to the transports
+            # We can Route your messages to the multiple transports
              'App\Message\AddPonkaToImage': async
+             'App\Message\DeletePhotoFile': async
