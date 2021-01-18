@@ -76,6 +76,7 @@ class ImagePostController extends AbstractController
         $entityManager->flush();
 
         $message = new AddPonkaToImage($imagePost->getId());
+        /** Creating custom Envelop to add delay time Stamp */
         $envelop = new Envelope($message, [
             new DelayStamp(500)
         ]);
